@@ -102,4 +102,4 @@ Edit token values in `src/tokens/index.ts`. The CSS in `dist/` is generated from
 
 ## Publish
 
-Bump `version` in `package.json`, then `npm publish` (it runs `bun run check` first). The package is scoped and restricted, so the `@steamlabs` npm organisation must exist and you must be logged in (`npm login`). To install from GitHub before publishing, use `bun add github:STEAMLabs-Africa/<repo>` once a built `dist/` is available, or install a packed tarball (`npm pack`).
+Bump `version` in `package.json`, then `npm publish` (it runs `bun run check` first). The package is scoped and restricted, so the `@steamlabs` npm organisation must exist and you must be logged in (`npm login`). Until it's published, build a tarball with `npm pack` and install that file (`bun add ./steamlabs-ui-0.1.0.tgz`).
