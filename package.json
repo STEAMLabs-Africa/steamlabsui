@@ -1,18 +1,36 @@
 {
-  "name": "@steamlabs/ui",
-  "version": "0.1.0",
-  "description": "STEAMLabs Africa UI library: design tokens, CSS and React components from the STEAMLabs web design system and Brand Manual.",
+  "name": "steamlabsui",
+  "version": "1.0.0",
+  "description": "STEAMLabs Africa UI library: design tokens, CSS and 70 React components, built from the STEAMLabs web design system and Brand Manual.",
   "license": "UNLICENSED",
   "type": "module",
-  "sideEffects": ["*.css"],
-  "files": ["dist", "README.md"],
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" },
-    "./tokens": { "types": "./dist/tokens.d.ts", "import": "./dist/tokens.js", "require": "./dist/tokens.cjs" },
-    "./logo": { "types": "./dist/logo.d.ts", "import": "./dist/logo.js", "require": "./dist/logo.cjs" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js",
+      "require": "./dist/tokens.cjs"
+    },
+    "./logo": {
+      "types": "./dist/logo.d.ts",
+      "import": "./dist/logo.js",
+      "require": "./dist/logo.cjs"
+    },
     "./styles.css": "./dist/styles.css",
     "./tokens.css": "./dist/tokens.css",
     "./components.css": "./dist/components.css",
@@ -27,24 +45,51 @@
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "check": "bun run typecheck && bun run build && bun test",
-    "prepublishOnly": "bun run check"
+    "prepublishOnly": "bun run check",
+    "docs": "bun run build && bun docs/site/build.tsx",
+    "new": "bun scripts/new-component.ts"
   },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true },
-    "react-dom": { "optional": true }
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "marked": "14.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.0"
   },
-  "publishConfig": { "access": "restricted" }
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/STEAMLabs-Africa/steamlabsui.git"
+  },
+  "homepage": "https://github.com/STEAMLabs-Africa/steamlabsui#readme",
+  "bugs": {
+    "url": "https://github.com/STEAMLabs-Africa/steamlabsui/issues"
+  },
+  "keywords": [
+    "steamlabs",
+    "steamlabs-africa",
+    "design-system",
+    "ui",
+    "react",
+    "components",
+    "tokens",
+    "tailwind"
+  ]
 }

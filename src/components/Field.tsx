@@ -22,13 +22,15 @@ export interface FieldProps {
   id?: string;
   hint?: React.ReactNode;
   error?: React.ReactNode;
+  /** Adds a marker to the label and sets `required` on the control. */
+  required?: boolean;
   className?: string;
-  /** A single Input, Textarea or select. It receives id and aria wiring. */
+  /** A single Input, Textarea or Select. It receives id and aria wiring. */
   children: React.ReactElement<Record<string, unknown>>;
 }
 
 /** A label, a control and an optional hint or error, wired for screen readers. */
-export function Field({ label, id, hint, error, className, children }: FieldProps) {
+export function Field({ label, id, hint, error, required, className, children }: FieldProps) {
   const auto = React.useId();
   const controlId = id ?? auto;
   const hintId = hint ? `${controlId}-hint` : undefined;
@@ -36,11 +38,15 @@ export function Field({ label, id, hint, error, className, children }: FieldProp
   const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
   return (
     <div className={cx("sla-field", className)}>
-      <Label htmlFor={controlId}>{label}</Label>
+      <Label htmlFor={controlId}>
+        {label}
+        {required ? <span className="sla-label__required" aria-hidden> *</span> : null}
+      </Label>
       {React.cloneElement(children, {
         id: controlId,
         "aria-describedby": describedBy,
         "aria-invalid": error ? true : undefined,
+        ...(required ? { required: true } : {}),
       })}
       {hint ? <p id={hintId} className="sla-field__hint">{hint}</p> : null}
       {error ? <p id={errorId} className="sla-field__error">{error}</p> : null}

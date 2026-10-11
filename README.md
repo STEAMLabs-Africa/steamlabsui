@@ -1,4 +1,4 @@
-# @steamlabs/ui
+# steamlabsui
 
 STEAMLabs Africa's UI library: design tokens, CSS and React components. It's built from two sources:
 
@@ -8,9 +8,9 @@ STEAMLabs Africa's UI library: design tokens, CSS and React components. It's bui
 ## Install
 
 ```sh
-bun add @steamlabs/ui
+bun add steamlabsui
 # or
-npm install @steamlabs/ui
+npm install steamlabsui
 ```
 
 React 18 or later is a peer dependency, and only the components need it. The CSS and tokens work without React.
@@ -18,9 +18,9 @@ React 18 or later is a peer dependency, and only the components need it. The CSS
 ## Use
 
 ```tsx
-import "@steamlabs/ui/styles.css"; // Poppins, tokens and component classes
-import { ThemeProvider, Band, Eyebrow, Heading, Button } from "@steamlabs/ui";
-import { Logo } from "@steamlabs/ui/logo";
+import "steamlabsui/styles.css"; // Poppins, tokens and component classes
+import { ThemeProvider, Band, Eyebrow, Heading, Button } from "steamlabsui";
+import { Logo } from "steamlabsui/logo";
 
 export function Hero() {
   return (
@@ -41,23 +41,23 @@ export function Hero() {
 
 | Import | What it is |
 |---|---|
-| `@steamlabs/ui` | React components and a `tokens` namespace |
-| `@steamlabs/ui/tokens` | Token values only (safe in server code and build scripts) |
-| `@steamlabs/ui/logo` | `<Logo>` with the five official variants inlined |
-| `@steamlabs/ui/styles.css` | Everything the components need: `fonts.css` + `tokens.css` + `components.css` |
-| `@steamlabs/ui/tokens.css` | CSS variables and program themes only |
-| `@steamlabs/ui/components.css` | The `.sla-*` classes only |
-| `@steamlabs/ui/fonts.css` | Poppins from Google Fonts (leave it out if you self-host) |
-| `@steamlabs/ui/brand.css` | Brand Manual layer: Roboto, tone steps, print type classes |
-| `@steamlabs/ui/tailwind.css` | Tailwind v4 theme so `bg-primary`, `text-ink-accent`, `rounded-xl`, `shadow-card` work |
-| `@steamlabs/ui/logos/logo-*.svg` | Cropped logo files for `<img>` |
+| `steamlabsui` | React components and a `tokens` namespace |
+| `steamlabsui/tokens` | Token values only (safe in server code and build scripts) |
+| `steamlabsui/logo` | `<Logo>` with the five official variants inlined |
+| `steamlabsui/styles.css` | Everything the components need: `fonts.css` + `tokens.css` + `components.css` |
+| `steamlabsui/tokens.css` | CSS variables and program themes only |
+| `steamlabsui/components.css` | The `.sla-*` classes only |
+| `steamlabsui/fonts.css` | Poppins from Google Fonts (leave it out if you self-host) |
+| `steamlabsui/brand.css` | Brand Manual layer: Roboto, tone steps, print type classes |
+| `steamlabsui/tailwind.css` | Tailwind v4 theme so `bg-primary`, `text-ink-accent`, `rounded-xl`, `shadow-card` work |
+| `steamlabsui/logos/logo-*.svg` | Cropped logo files for `<img>` |
 
 ### Tailwind v4
 
 ```css
 @import "tailwindcss";
-@import "@steamlabs/ui/styles.css";
-@import "@steamlabs/ui/tailwind.css";
+@import "steamlabsui/styles.css";
+@import "steamlabsui/tailwind.css";
 ```
 
 ### Without React
@@ -65,7 +65,7 @@ export function Hero() {
 Every component is a set of plain classes, so HTML, Vue, Svelte or email templates can use them directly:
 
 ```html
-<link rel="stylesheet" href="node_modules/@steamlabs/ui/dist/styles.css" />
+<link rel="stylesheet" href="node_modules/steamlabsui/dist/styles.css" />
 <div class="sla">
   <a class="sla-btn sla-btn--primary sla-btn--cta" href="/join">Get involved</a>
 </div>
@@ -73,7 +73,22 @@ Every component is a set of plain classes, so HTML, Vue, Svelte or email templat
 
 ## Components
 
-`Button` (primary, secondary, outline, ghost, link, destructive; sizes default, sm, lg, icon, cta; `asChild`), `Badge`, `Pill`, `Card` with `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` and `CardFooter` (`feature` adds the flat offset shadow), `Input`, `Textarea`, `Label`, `Field` (wires the label, hint and error for screen readers), `Eyebrow`, `Heading` (wrap a phrase in `<em>` to colour it green), `Lead`, `Band` (background, surface, ink), `Container`, `ThemeProvider` and `Logo`.
+70 React exports in 45 families, merged from every STEAMLabs repo and restyled to the brand tokens. The [docs site](#docs) shows each one live with its props and code.
+
+| Category | Components |
+|---|---|
+| Foundations | `ThemeProvider`, `Logo`, `Icon`, `tokens` |
+| Layout | `Band`, `Container`, `Section`, `SectionHeader`, `PageHeader`, `Separator` |
+| Typography | `Eyebrow`, `Heading`, `Lead`, `TextLink` |
+| Actions | `Button` (with `loading` and `asChild`), `BackLink`, `Menu`, `SegmentedControl` |
+| Forms | `Field`, `Input`, `Textarea`, `Label`, `Select`, `Checkbox`, `RadioGroup`, `Switch` |
+| Data display | `Badge`, `Pill`, `Avatar`, `AvatarGroup`, `Card` and parts, `CodedCard`, `Stat`, `Table` and parts, `List`, `ListItem`, `Tile`, `TileGrid`, `Progress`, `ProgressRing`, `Steps`, `Accordion`, `AccordionItem` |
+| Navigation | `Tabs` and parts, `Breadcrumb`, `Pagination`, `SkipLink` |
+| Feedback | `Alert`, `EmptyState`, `Spinner`, `Skeleton`, `ToastProvider`, `useToast` |
+| Overlays | `Dialog` (modal, side sheet, drawer), `Tooltip` |
+| Motion | `Reveal`, `CountUp` |
+
+Interactive pieces use native HTML (`<dialog>`, `<details>`, real form controls), so there are no runtime dependencies beyond React.
 
 ## Program themes
 
@@ -90,12 +105,24 @@ Set `theme` on `ThemeProvider` (or `data-theme` on any element) to one of `acade
 
 The Brand Manual's RGB values don't match its own hex codes (for example, Clover Green is listed as RGB 60,153,56 but #3E9E49). This library follows the hex codes, as the website does.
 
+## Docs
+
+```sh
+bun run docs   # writes docs-dist/index.html: ReadMe-style docs with live previews
+```
+
+- [docs/INVENTORY.md](docs/INVENTORY.md): every component found across the repos and where it went
+- [docs/ADDING-COMPONENTS.md](docs/ADDING-COMPONENTS.md): how to add a component (`bun run new <Name>`)
+- [docs/PUBLISHING.md](docs/PUBLISHING.md): publishing to npm and bun
+- [CHANGELOG.md](CHANGELOG.md)
+
 ## Develop
 
 ```sh
 bun install
-bun run check          # typecheck, build, tests
-bun examples/render.tsx # writes examples/preview.html showing every component
+bun run check           # typecheck, build, tests
+bun run docs            # build the docs site
+bun run new Rating      # scaffold a new component
 ```
 
 Edit token values in `src/tokens/index.ts`. The CSS in `dist/` is generated from it by `scripts/build-css.ts`.

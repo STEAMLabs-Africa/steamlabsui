@@ -11,7 +11,7 @@ import { Logo } from "../src/logo";
 import { tones } from "../src/tokens";
 
 const dist = join(import.meta.dir, "../dist");
-const css = readFileSync(join(dist, "styles.css"), "utf8") + readFileSync(join(dist, "brand.css"), "utf8").replace(/@import[^;]+;/, "");
+const css = readFileSync(join(dist, "styles.css"), "utf8") + readFileSync(join(dist, "brand.css"), "utf8").replace(/@import url\("[^"]*"\);/g, "");
 
 const Page = () => (
   <ThemeProvider>
@@ -81,6 +81,6 @@ const Page = () => (
 
 writeFileSync(
   join(import.meta.dir, "preview.html"),
-  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>@steamlabs/ui preview</title><style>body{margin:0}${css}</style></head><body>${renderToStaticMarkup(<Page />)}</body></html>`,
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>steamlabsui preview</title><style>body{margin:0}${css}</style></head><body>${renderToStaticMarkup(<Page />)}</body></html>`,
 );
 console.log("wrote examples/preview.html");
