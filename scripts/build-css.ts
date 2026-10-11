@@ -33,7 +33,7 @@ const root = join(import.meta.dir, "..");
 const out = join(root, "dist");
 mkdirSync(out, { recursive: true });
 
-const header = "/* @steamlabs/ui — generated from src/tokens by scripts/build-css.ts. Do not edit. */\n";
+const header = "/* steamlabsui — generated from src/tokens by scripts/build-css.ts. Do not edit. */\n";
 const decls = (entries: [string, string | number][], indent = "  ") =>
   entries.map(([k, v]) => `${indent}--${k}: ${v};`).join("\n");
 

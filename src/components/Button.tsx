@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Spinner } from "./Feedback";
 import { cx, Slot } from "./utils";
 
 export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "link" | "destructive";
@@ -11,6 +12,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   size?: ButtonSize;
   /** Style the single child element (such as a link) instead of rendering a `<button>`. */
   asChild?: boolean;
+  /** Shows a spinner, disables the button and sets aria-busy. Keeps the label so the width doesn't jump. */
+  loading?: boolean;
 }
 
 export function buttonClass({ variant = "primary", size = "default" }: Pick<ButtonProps, "variant" | "size"> = {}): string {
@@ -18,10 +21,28 @@ export function buttonClass({ variant = "primary", size = "default" }: Pick<Butt
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, type, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, loading = false, type, disabled, children, ...props }, ref) => {
     const classes = cx(buttonClass({ variant, size }), className);
-    if (asChild) return <Slot ref={ref as React.Ref<HTMLElement>} className={classes} {...props} />;
-    return <button ref={ref} type={type ?? "button"} className={classes} {...props} />;
+    if (asChild) {
+      return (
+        <Slot ref={ref as React.Ref<HTMLElement>} className={classes} {...props}>
+          {children}
+        </Slot>
+      );
+    }
+    return (
+      <button
+        ref={ref}
+        type={type ?? "button"}
+        className={classes}
+        disabled={disabled || loading}
+        aria-busy={loading || undefined}
+        {...props}
+      >
+        {loading ? <Spinner label="" /> : null}
+        {children}
+      </button>
+    );
   },
 );
 Button.displayName = "Button";

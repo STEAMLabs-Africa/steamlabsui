@@ -50,6 +50,8 @@ export const color = {
   "secondary-deep": clover.oklch,
   muted: hampton.oklch,
   "muted-foreground": "oklch(0.45 0 0)",
+  /** Neutral grey for hover rows, tracks and skeletons. Not a brand tint. */
+  subtle: "oklch(0.965 0 0)",
   accent: fuel.oklch,
   "accent-foreground": ink,
   ink: clover.oklch,
