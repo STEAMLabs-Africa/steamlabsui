@@ -1,6 +1,6 @@
 # steamlabsui
 
-STEAMLabs Africa's UI library: design tokens, CSS and React components. It's built from two sources:
+STEAMLabs Africa's UI library: design tokens, CSS and React components and some craizy stuff. It's built from two sources:
 
 - **The web design system** ("STEAMLabs Africa Web Design", extracted from the `STEAMLabs_official_website` repo). The default everywhere.
 - **The SLA Brand-Manual 2026** (general and print design). It adds Roboto, colour tone steps, the print type scale and the logo rules, in a separate brand layer.
