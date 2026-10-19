@@ -355,7 +355,7 @@ const clientJs = (await client.outputs[0]!.text()).replace(/<\/script/gi, "<\\/s
 
 const libCss = readFileSync(join(root, "dist/styles.css"), "utf8").replace(/@import url\("[^"]*"\);/g, "");
 const siteCss = readFileSync(join(here, "site.css"), "utf8");
-const logoSvg = ssr(React.createElement((await import("../../src/logo")).Logo, { width: 70 }));
+const { uiLogoSvg } = await import("./ui-logo");
 
 const nav = `
 <div class="side-group"><p class="side-title">Getting started</p><ul>${guides.map((g) => `<li><a href="#${g.id}">${esc(g.title)}</a></li>`).join("")}</ul></div>
@@ -363,12 +363,14 @@ ${byCategory.map((g) => `<div class="side-group"><p class="side-title">${g.c}</p
 <div class="side-group"><p class="side-title">Contributing</p><ul>${resources.map((r) => `<li><a href="#${r.id}">${esc(r.title)}</a></li>`).join("")}</ul></div>`;
 
 const body = `
+<div class="splash" id="splash" aria-hidden="true"><div class="splash-logo">${uiLogoSvg({ animate: true })}</div></div>
+<div class="loadbar" id="loadbar" aria-hidden="true"></div>
 <a class="skip" href="#content">Skip to content</a>
 <header class="topbar">
   <button type="button" id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="sidebar" aria-label="Menu">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
-  <a class="brand" href="#introduction">${logoSvg}<span class="brand-name">UI library</span></a>
+  <a class="brand" href="#introduction" aria-label="STEAMLabs UI, home">${uiLogoSvg({ id: "brand-logo" })}</a>
   <span class="version">v${pkg.version}</span>
   <nav class="top-links">
     <a href="#components-start">Components</a>
