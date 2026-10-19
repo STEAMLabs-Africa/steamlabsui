@@ -4,8 +4,10 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { examples } from "./all-examples.generated";
 
-// Loading screen: hold the drawn logo for at least 1.9s and until the page has
-// loaded, then fly it into the top bar's logo and drop the splash.
+// Loading screen: let the logo finish drawing, hold it briefly, then fly it
+// into the top bar's logo and drop the splash. Timing follows the drawing's own
+// animations rather than the page's load event, so a reload that renders late
+// (slow fonts, a busy tab) still plays the whole sequence.
 const splash = document.getElementById("splash");
 if (splash) {
   const done = () => {
@@ -15,22 +17,21 @@ if (splash) {
   };
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) done();
   else {
+    // The script is running, so the no-JS fallback that hides the splash is no longer needed.
+    splash.style.animation = "none";
     document.body.classList.add("splashing");
-    const start = performance.now();
     const fly = () => {
       const logo = splash.querySelector<HTMLElement>(".splash-logo");
       const target = document.getElementById("brand-logo");
       if (!logo || !target) return done();
-      window.scrollTo(0, 0);
       const from = logo.getBoundingClientRect();
       const to = target.getBoundingClientRect();
       splash.classList.add("leaving");
       logo.style.transform = `translate(${to.left - from.left}px, ${to.top - from.top}px) scale(${to.width / from.width})`;
       setTimeout(done, 720);
     };
-    const ready = () => setTimeout(fly, Math.max(0, 1900 - (performance.now() - start)));
-    if (document.readyState === "complete") ready();
-    else addEventListener("load", ready, { once: true });
+    const drawing = splash.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined));
+    Promise.all(drawing).then(() => setTimeout(fly, 800));
   }
 }
 
