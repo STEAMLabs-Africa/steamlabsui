@@ -344,6 +344,23 @@ ${source ? `<p class="source"><b>Replaces</b> ${esc(source)}</p>` : ""}`;
 
 // ---------------------------------------------------------------- page
 
+// Write every character above ASCII as an escape: an HTML entity in markup, a
+// \u escape in scripts and a CSS escape in styles. The artifact viewer can
+// decode the page as Windows-1252, which turns a curly apostrophe into "â€™";
+// an all-ASCII page reads the same whatever the viewer assumes.
+function asciiSafe(html: string) {
+  const escape = (text: string, as: (ch: string) => string) => text.replace(/[^\x00-\x7f]/gu, as);
+  const hex = (ch: string) => ch.codePointAt(0)!.toString(16);
+  const entity = (ch: string) => `&#x${hex(ch)};`;
+  const cssEscape = (ch: string) => `\\${hex(ch)} `;
+  const jsEscape = (ch: string) => [...Array(ch.length).keys()].map((i) => `\\u${ch.charCodeAt(i).toString(16).padStart(4, "0")}`).join("");
+  return html.replace(
+    /(<script\b[^>]*>)([\s\S]*?)(<\/script>)|(<style\b[^>]*>)([\s\S]*?)(<\/style>)|([^<]+|<)/g,
+    (_, so, sb, sc, to, tb, tc, rest) =>
+      so ? so + escape(sb, jsEscape) + sc : to ? to + escape(tb, cssEscape) + tc : escape(rest, entity),
+  );
+}
+
 const client = await Bun.build({
   entrypoints: [join(here, "client.tsx")],
   target: "browser",
@@ -392,7 +409,7 @@ const body = `
   </main>
 </div>`;
 
-const page = `<title>steamlabsui Docs</title>
+const page = asciiSafe(`<title>steamlabsui Docs</title>
 <meta name="description" content="Docs for steamlabsui, the STEAMLabs Africa UI library.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -401,7 +418,7 @@ const page = `<title>steamlabsui Docs</title>
 <style>${siteCss}</style>
 ${body}
 <script>${clientJs}</script>
-`;
+`);
 
 writeFileSync(join(out, "index.html"), page);
 // A standalone copy with its own document skeleton, for GitHub Pages or opening locally.
