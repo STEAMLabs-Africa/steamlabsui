@@ -68,8 +68,7 @@ code { font-family: var(--font-code); font-size: .86em; }
   background: var(--doc-bg); border-bottom: 1px solid var(--doc-line);
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--doc-fg); }
-.brand svg { display: block; }
-.brand-name { font-weight: 700; font-size: 15px; letter-spacing: -.01em; padding-left: 10px; border-left: 1px solid var(--doc-line); white-space: nowrap; }
+.brand .ui-logo { display: block; height: 32px; width: auto; }
 .version { font: 500 12px/1 var(--font-code); color: var(--doc-muted); border: 1px solid var(--doc-line); padding: 4px 8px; border-radius: 99px; }
 .top-links { margin-left: auto; display: flex; gap: 20px; }
 .top-links a { color: var(--doc-fg); text-decoration: none; font-weight: 500; font-size: 14px; }
@@ -225,3 +224,31 @@ div.demo-swatch { display: grid; padding: 24px; }
   .type-row > code:last-child { display: none; }
 }
 @media (max-width: 860px) and (prefers-reduced-motion: reduce) { .sidebar { transition: none; } }
+
+/* Loading screen: the STEAMLabs UI logo draws itself in the middle of the
+   screen, holds until the page is ready, then client.tsx flies it into the
+   top bar. If the script never runs, the splash clears itself after 4s. */
+.splash { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; background: var(--doc-bg);
+  transition: background-color 700ms cubic-bezier(.22, 1, .36, 1); animation: splash-fallback 0s 4s forwards; }
+.splash-logo { width: min(78vw, 460px); transform-origin: 0 0; }
+.splash-logo .ui-logo { display: block; width: 100%; height: auto; }
+.splash.leaving { background-color: transparent; pointer-events: none; }
+.splash.leaving .splash-logo { transition: transform 700ms cubic-bezier(.22, 1, .36, 1); }
+@keyframes splash-fallback { to { visibility: hidden; } }
+.loadbar { position: fixed; left: 0; top: env(safe-area-inset-top, 0px); z-index: 91; width: 100%; height: 3px; background: var(--doc-mark);
+  transform-origin: left; pointer-events: none; animation: loadbar 1900ms cubic-bezier(.22, 1, .36, 1) forwards; }
+@keyframes loadbar { 0% { transform: scaleX(0); } 85% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+body.splashing .brand .ui-logo { visibility: hidden; }
+
+.ui-logo [data-draw] { stroke-dasharray: 1; stroke-dashoffset: 1; animation: ui-logo-draw 700ms cubic-bezier(.22, 1, .36, 1) forwards; animation-delay: var(--d, 0ms); }
+.ui-logo [data-fade] { fill-opacity: 0; animation: ui-logo-fade 520ms ease-out forwards; animation-delay: var(--d, 0ms); }
+.ui-logo [data-pop] { opacity: 0; transform-box: fill-box; transform-origin: center; animation: ui-logo-pop 480ms cubic-bezier(.34, 1.56, .64, 1) forwards; animation-delay: var(--d, 0ms); }
+@keyframes ui-logo-draw { 99% { stroke-dashoffset: 0; stroke-dasharray: 1; } to { stroke-dashoffset: 0; stroke-dasharray: none; } }
+@keyframes ui-logo-fade { to { fill-opacity: 1; } }
+@keyframes ui-logo-pop { 0% { opacity: 0; transform: scale(.3); } 70% { transform: scale(1.25); } 100% { opacity: 1; transform: scale(1); } }
+.ui-logo[data-animate="false"] [data-draw], .ui-logo[data-animate="false"] [data-fade], .ui-logo[data-animate="false"] [data-pop] {
+  animation: none; stroke-dashoffset: 0; stroke-dasharray: none; opacity: 1; fill-opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .splash, .loadbar { display: none; }
+  body.splashing .brand .ui-logo { visibility: visible; }
+}

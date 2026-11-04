@@ -344,6 +344,23 @@ ${source ? `<p class="source"><b>Replaces</b> ${esc(source)}</p>` : ""}`;
 
 // ---------------------------------------------------------------- page
 
+// Write every character above ASCII as an escape: an HTML entity in markup, a
+// \u escape in scripts and a CSS escape in styles. The artifact viewer can
+// decode the page as Windows-1252, which turns a curly apostrophe into "â€™";
+// an all-ASCII page reads the same whatever the viewer assumes.
+function asciiSafe(html: string) {
+  const escape = (text: string, as: (ch: string) => string) => text.replace(/[^\x00-\x7f]/gu, as);
+  const hex = (ch: string) => ch.codePointAt(0)!.toString(16);
+  const entity = (ch: string) => `&#x${hex(ch)};`;
+  const cssEscape = (ch: string) => `\\${hex(ch)} `;
+  const jsEscape = (ch: string) => [...Array(ch.length).keys()].map((i) => `\\u${ch.charCodeAt(i).toString(16).padStart(4, "0")}`).join("");
+  return html.replace(
+    /(<script\b[^>]*>)([\s\S]*?)(<\/script>)|(<style\b[^>]*>)([\s\S]*?)(<\/style>)|([^<]+|<)/g,
+    (_, so, sb, sc, to, tb, tc, rest) =>
+      so ? so + escape(sb, jsEscape) + sc : to ? to + escape(tb, cssEscape) + tc : escape(rest, entity),
+  );
+}
+
 const client = await Bun.build({
   entrypoints: [join(here, "client.tsx")],
   target: "browser",
@@ -355,7 +372,7 @@ const clientJs = (await client.outputs[0]!.text()).replace(/<\/script/gi, "<\\/s
 
 const libCss = readFileSync(join(root, "dist/styles.css"), "utf8").replace(/@import url\("[^"]*"\);/g, "");
 const siteCss = readFileSync(join(here, "site.css"), "utf8");
-const logoSvg = ssr(React.createElement((await import("../../src/logo")).Logo, { width: 70 }));
+const { uiLogoSvg } = await import("./ui-logo");
 
 const nav = `
 <div class="side-group"><p class="side-title">Getting started</p><ul>${guides.map((g) => `<li><a href="#${g.id}">${esc(g.title)}</a></li>`).join("")}</ul></div>
@@ -363,12 +380,14 @@ ${byCategory.map((g) => `<div class="side-group"><p class="side-title">${g.c}</p
 <div class="side-group"><p class="side-title">Contributing</p><ul>${resources.map((r) => `<li><a href="#${r.id}">${esc(r.title)}</a></li>`).join("")}</ul></div>`;
 
 const body = `
+<div class="splash" id="splash" aria-hidden="true"><div class="splash-logo">${uiLogoSvg({ animate: true })}</div></div>
+<div class="loadbar" id="loadbar" aria-hidden="true"></div>
 <a class="skip" href="#content">Skip to content</a>
 <header class="topbar">
   <button type="button" id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="sidebar" aria-label="Menu">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
   </button>
-  <a class="brand" href="#introduction">${logoSvg}<span class="brand-name">UI library</span></a>
+  <a class="brand" href="#introduction" aria-label="STEAMLabs UI, home">${uiLogoSvg({ id: "brand-logo" })}</a>
   <span class="version">v${pkg.version}</span>
   <nav class="top-links">
     <a href="#components-start">Components</a>
@@ -390,7 +409,7 @@ const body = `
   </main>
 </div>`;
 
-const page = `<title>steamlabsui Docs</title>
+const page = asciiSafe(`<title>steamlabsui Docs</title>
 <meta name="description" content="Docs for steamlabsui, the STEAMLabs Africa UI library.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -399,7 +418,7 @@ const page = `<title>steamlabsui Docs</title>
 <style>${siteCss}</style>
 ${body}
 <script>${clientJs}</script>
-`;
+`);
 
 writeFileSync(join(out, "index.html"), page);
 // A standalone copy with its own document skeleton, for GitHub Pages or opening locally.
