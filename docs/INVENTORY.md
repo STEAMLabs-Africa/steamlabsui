@@ -56,6 +56,7 @@ Every UI component found across the STEAMLabs Africa repositories on 2026-10-11,
 | `Separator` | Layout | website `ui/separator` |
 | `Reveal` | Motion | website `Reveal`; SLAP `Reveal`; forms `landing/Reveal` |
 | `CountUp` | Motion | website `CountUp` |
+| `SignInButton` | Actions | steamlabs-id-check (STEAMLabs ID sign-in) |
 
 ## Next candidates (not in v1.0)
 

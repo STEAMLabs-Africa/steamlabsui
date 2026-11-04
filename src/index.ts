@@ -67,3 +67,6 @@ export type { RevealProps, CountUpProps } from "./components/Motion";
 export { cx } from "./components/utils";
 export * as tokens from "./tokens";
 export type { BrandColor, ColorToken, ThemeName, LogoVariant } from "./tokens";
+
+export { SignInButton } from "./components/SignInButton";
+export type { SignInButtonProps } from "./components/SignInButton";
