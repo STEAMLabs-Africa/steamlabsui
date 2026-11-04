@@ -529,10 +529,28 @@
 .sla-reveal--armed.sla-reveal--shown { opacity: 1; transform: none; }
 .sla-count-up { font-variant-numeric: tabular-nums; }
 
+/* SignInButton: "Sign in with STEAMLabs ID", the same in every app */
+.sla-sign-in-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3);
+  min-height: 48px; padding: var(--space-2) var(--space-6) var(--space-2) var(--space-3);
+  border: 1px solid var(--input); border-radius: var(--radius-lg);
+  font: 600 16px/22px var(--font-body); text-decoration: none; cursor: pointer;
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease);
+}
+.sla-sign-in-button:hover { transform: translateY(-1px); box-shadow: var(--shadow-card); }
+.sla-sign-in-button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.sla-sign-in-button__mark { display: inline-flex; flex-shrink: 0; }
+.sla-sign-in-button__label { white-space: nowrap; }
+.sla-sign-in-button--light { background: var(--background); color: var(--foreground); }
+/* White on Clover Green only at 18px bold and up (brand rule). */
+.sla-sign-in-button--dark { background: var(--ink); color: var(--ink-foreground); border-color: var(--ink); font-size: 18px; font-weight: 700; }
+.sla-sign-in-button--block { display: flex; width: 100%; }
+
 @media (prefers-reduced-motion: reduce) {
   .sla-btn, .sla-btn--cta:hover { transition: none; transform: none; }
   .sla-coded-card, .sla-coded-card:hover, .sla-tile, .sla-tile:hover { transition: none; transform: none; }
   .sla-spinner { animation-duration: 2s; }
   .sla-skeleton, .sla-toast { animation: none; }
   .sla-reveal--armed { opacity: 1; transform: none; transition: none; }
+  .sla-sign-in-button, .sla-sign-in-button:hover { transition: none; transform: none; }
 }
